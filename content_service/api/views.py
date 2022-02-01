@@ -96,3 +96,7 @@ class BookDetailAPI(APIView):
         book = self.get_object(pk)
         book.delete()
         return Response({"Detail": "Deleted"})
+
+
+class UserInteractionService(APIView):
+    pass
