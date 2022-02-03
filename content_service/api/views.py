@@ -56,6 +56,8 @@ class BookAPI(APIView):
                 "story": book.story,
                 "date_published": book.date_published,
                 "user_id": book.user_id,
+                "like_count": book.like_count,
+                "read_count": book.read_count,
             }
             result.append(item)
 
@@ -98,5 +100,13 @@ class BookDetailAPI(APIView):
         return Response({"Detail": "Deleted"})
 
 
-class UserInteractionService(APIView):
-    pass
+class UserInteractionServiceAPI(APIView):
+    def get_object(self, pk):
+        try:
+            return Book.objects.get(pk=pk)
+        except Book.DoesNotExist:
+            return Response({"Error": "Book does not exist with this Primary key."})
+
+    def post(self, request, pk, format=None):
+        book = self.get_object(pk)
+        pass

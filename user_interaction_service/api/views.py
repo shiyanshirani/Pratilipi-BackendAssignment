@@ -15,4 +15,12 @@ class UserInteractionAPI(APIView):
         return Response(response.json())
 
     def post(self, request):
-        
+        email = request.data["email_id"]
+        password = request.data["password"]
+
+        # Validate wheter a user exists or not
+        # user_service = request.post(email=email, password=password)
+
+        response = requests.get(
+            "https://httpbin.org/basic-auth/user/pass", auth=("email", "password")
+        )

@@ -8,8 +8,8 @@ class Book(models.Model):
     story = models.TextField(blank=True, null=False)
     date_published = models.DateTimeField(auto_now_add=True)
     user_id = models.CharField(max_length=120, blank=True, null=False)
-    read = models.PositiveIntegerField(default=0, blank=False)
-    like = models.PositiveIntegerField(default=0, null=False)
+    read_count = models.PositiveIntegerField(default=0, blank=False)
+    like_count = models.PositiveIntegerField(default=0, null=False)
 
     class Meta:
         verbose_name = "Book"

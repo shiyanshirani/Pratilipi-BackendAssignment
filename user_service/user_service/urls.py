@@ -19,6 +19,7 @@ from django.urls import path, include
 
 # DRF imports
 from rest_framework import permissions
+from rest_framework.authtoken.views import obtain_auth_token
 
 # Package imports
 from drf_yasg import openapi
@@ -46,4 +47,5 @@ urlpatterns = [
         schema_view.with_ui("swagger", cache_timeout=0),
         name="schema-swagger-ui",
     ),
+    path("login/", obtain_auth_token, name="obtain-auth-token"),
 ]

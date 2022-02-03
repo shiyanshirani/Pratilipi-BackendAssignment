@@ -1,11 +1,11 @@
 # Project imports
-from api.models import Profile
+from api.models import User
 
 # DRF imports
 from rest_framework import serializers
 
 
-class ProfileSerializer(serializers.ModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Profile
-        fields = "__all__"
+        model = User
+        fields = ["id", "first_name", "last_name", "email", "phone_number"]
