@@ -6,10 +6,14 @@ from api.models import Book
 
 
 def csv_to_db(file):
+    """[Function to convert csv rows into Book objects]
+
+    Args:
+        file ([csv_file]): [Contains multiple csv of books with required columns.]
+    """
     try:
         csv_file = pd.read_csv(file)
         csv_dict = csv_file.to_dict("records")
-        print(csv_dict)
         csv_objects = [
             Book(
                 title=row["title"],

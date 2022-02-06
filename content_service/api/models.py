@@ -4,6 +4,10 @@ from django.db import models
 
 
 class Book(models.Model):
+    """
+    Model Schema for Book
+    """
+
     title = models.CharField(max_length=250, blank=True, null=False)
     story = models.TextField(blank=True, null=False)
     date_published = models.DateTimeField(auto_now_add=True)

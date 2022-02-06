@@ -1,6 +1,9 @@
 # Package imports
 import pandas as pd
 
+# Django imports
+from django.http import Http404, HttpResponseNotFound
+
 # DRF Imports
 from rest_framework import generics
 from rest_framework.views import APIView
@@ -10,8 +13,12 @@ from rest_framework.exceptions import ValidationError
 # Project imports
 from api.models import Book
 from api.tasks import csv_to_db
-from api.serializers import BookSerializer
-from api.serializers import BookDetailSerializer
+from api.serializers import BookUploadSerializer
+from api.serializers import (
+    BookDetailSerializer,
+    NewContentSerializer,
+    TopContentSerializer,
+)
 
 
 REQUIRED_COLUMNS = ["title", "story", "user_id"]
@@ -19,28 +26,37 @@ REQUIRED_COLUMNS = ["title", "story", "user_id"]
 # Create your views here.
 
 
-class NewContentAPI(APIView):
-    def get(self, request):
-        books = Book.objects.order_by("-date_published")
-        result = []
-        for book in books:
-            item = {
-                "id": book.id,
-                "title": book.title,
-                "story": book.story,
-                "date_published": book.date_published,
-                "user_id": book.user_id,
-            }
-            result.append(item)
+class TopContentAPI(APIView):
+    """
+    API to return list of Book on their 'like' and 'read' order.
+    """
 
-        return Response(result)
+    def get(self, request):
+        books = Book.objects.all()
+        serializer = TopContentSerializer(books, many=True)
+        return Response(serializer.data)
+
+
+class NewContentAPI(APIView):
+    """
+    API to return the latest content
+    """
+
+    def get(self, request):
+        books = Book.objects.all()
+        serializer = NewContentSerializer(books, many=True)
+        return Response(serializer.data)
 
 
 class BookAPI(APIView):
+    """
+    API to POST and GET Book
+    """
+
     def post(self, request):
-        serializer = BookSerializer(data=request.data)
+        serializer = BookUploadSerializer(data=request.data)
         if serializer.is_valid():
-            csv_file = serializer.validated_data["input_file"]
+            csv_file = serializer.validated_data["input_file"]  # Data ingestion of csv
             csv_to_db(csv_file)
             return Response({"Success": "Content added."})
 
@@ -48,25 +64,13 @@ class BookAPI(APIView):
 
     def get(self, request):
         books = Book.objects.all()
-        result = []
-        for book in books:
-            item = {
-                "id": book.id,
-                "title": book.title,
-                "story": book.story,
-                "date_published": book.date_published,
-                "user_id": book.user_id,
-                "like_count": book.like_count,
-                "read_count": book.read_count,
-            }
-            result.append(item)
-
-        return Response(result)
+        serializer = BookDetailSerializer(books, many=True)
+        return Response(serializer.data)
 
 
 class BookDetailAPI(APIView):
     """
-    Retrieve, update or delete a snippet instance.
+    RETRIEVE, UPDATE or DELETE a Book instance.
     """
 
     def get_object(self, pk):
@@ -100,13 +104,47 @@ class BookDetailAPI(APIView):
         return Response({"Detail": "Deleted"})
 
 
-class UserInteractionServiceAPI(APIView):
+class BookLikeAPI(APIView):
+    """
+    API to trigger 'Like' endpoint
+    """
+
     def get_object(self, pk):
         try:
             return Book.objects.get(pk=pk)
         except Book.DoesNotExist:
-            return Response({"Error": "Book does not exist with this Primary key."})
+            return HttpResponseNotFound
 
-    def post(self, request, pk, format=None):
-        book = self.get_object(pk)
-        pass
+    def post(self, request, format=None):
+        book_id = request.data["book_id"]
+        book = self.get_object(pk=book_id)
+        try:
+            book.like_count += 1
+            book.save()
+            return Response({"Detail": "Success"})
+
+        except Exception as e:
+            return HttpResponseNotFound
+
+
+class BookReadAPI(APIView):
+    """
+    API to trigger 'Read' endpoint
+    """
+
+    def get_object(self, pk):
+        try:
+            return Book.objects.get(pk=pk)
+        except Book.DoesNotExist:
+            return HttpResponseNotFound
+
+    def post(self, request, format=None):
+        book_id = request.data["book_id"]
+        book = self.get_object(pk=book_id)
+        try:
+            book.read_count += 1
+            book.save()
+            return Response({"Detail": "Success"})
+
+        except Exception as e:
+            return HttpResponseNotFound
