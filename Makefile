@@ -15,3 +15,4 @@ up:
 
 down:
 	docker-compose down
+	
