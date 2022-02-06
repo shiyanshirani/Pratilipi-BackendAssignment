@@ -30,6 +30,7 @@ ALLOWED_HOSTS = []
 """ 
     NOTE: CUSTOM USER INITIALIZED
 """
+AUTH_USER_MODEL = "api.User"
 
 # Application definition
 
@@ -41,12 +42,10 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     # INSTALLED_APPS
-    "rest_framework.authtoken",
     "rest_framework",
     "drf_yasg",
     "api",
 ]
-AUTH_USER_MODEL = "api.User"
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -57,22 +56,6 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
-
-
-# REST_FRAMEWORK = {
-#     "DEFAULT_AUTHENTICATION_CLASSES": [
-#         "rest_framework.authentication.BasicAuthentication",
-#         "rest_framework.authentication.SessionAuthentication",
-#     ],
-#     "DEFAULT_PERMISSION_CLASSES": [
-#         "rest_framework.permissions.IsAuthenticated",
-#     ],
-# }
-
-# AUTHENTICATION_BACKENDS = [
-#     "api.backends.EmailBackend",
-# ]
-
 
 ROOT_URLCONF = "user_service.urls"
 

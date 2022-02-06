@@ -12,6 +12,11 @@ from api.managers import UserManager
 
 
 class User(AbstractBaseUser, PermissionsMixin):
+    """
+    Custom USER Model Schema to store required fields for the assignment
+    binded with a Custom User Manager
+    """
+
     first_name = models.CharField(_("first name"), max_length=30, blank=True)
     last_name = models.CharField(_("last name"), max_length=30, blank=True)
     email = models.EmailField(_("email address"), unique=True)

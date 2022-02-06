@@ -1,24 +1,31 @@
 # Project imports
 from api.models import User
 from api.serializers import UserSerializer
-from api.authentication import MyAuthentication
+from api.authentication import CustomAuthentication
 
 # Django imports
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import login, authenticate
+from django.contrib.auth.hashers import make_password
 
 # DRF imports
+from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.authentication import BasicAuthentication
 from rest_framework.generics import RetrieveUpdateDestroyAPIView
-
-# Django Imports
-
-# from api.backends import MyAuthBackend
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 
 # Create your views here.
 class UserAPI(APIView):
+    """[User API for POST and GET request]
+
+    Args:
+        first_name: CharField
+        last_name: CharField
+        email: EmailField
+        phone_number: CharField
+        password: PasswordField
+    """
+
     def post(self, request):
         try:
             user = User(
@@ -26,7 +33,7 @@ class UserAPI(APIView):
                 last_name=request.data["last_name"],
                 email=request.data["email"],
                 phone_number=request.data["phone_number"],
-                password=request.data["password"],
+                password=make_password(request.data["password"]),
             )
             user.save()
 
@@ -37,31 +44,27 @@ class UserAPI(APIView):
 
     def get(self, request):
         profiles = User.objects.all()
-        result = []
-        for profile in profiles:
-            item = {
-                "id": profile.id,
-                "first_name": profile.first_name,
-                "last_name": profile.last_name,
-                "email": profile.email,
-                "phone_number": profile.phone_number,
-            }
-            result.append(item)
-        return Response(result)
+        serializer = UserSerializer(profiles, many=True)
+        return Response(serializer.data)
 
 
 class UserDetailAPI(RetrieveUpdateDestroyAPIView):
+    """
+    [User API - GET, UPDATE, DELETE by <id>]
+    """
 
     serializer_class = UserSerializer
     queryset = User.objects.all()
 
 
-class UserInteractionServiceAPI(APIView):
-    authentication_classes = (CustomAuthentication,)
+class ValidateUserAPI(APIView):
+    """
+    API to Validate user using their crendentials
+    with a custom Basic Authentication in authentications.py
+    """
 
-    def get(self, request, format=None):
-        content = {
-            "user": str(request.user),  # `django.contrib.auth.User` instance.
-            "auth": str(request.auth),  # None
-        }
-        return Response(content)
+    # authentication_classes = [CustomAuthentication]
+    authentication_classes = [BasicAuthentication]
+
+    def get(self, request):
+        return Response(status=status.HTTP_200_OK)
