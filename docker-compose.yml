@@ -19,4 +19,4 @@ services:
         ports:
             - '8000:8000'
         environment:
-            - CONTENT_SERVICE_API=${CONTENT_SERVICE_API}
+            - CONTENT_SERVICE_API=${CONTENT_SERVICE_API
