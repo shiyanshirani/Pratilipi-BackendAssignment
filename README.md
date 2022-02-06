@@ -32,7 +32,7 @@ Start all the microservices
 
 ## Screenshots
 
-![Architecture Diagram](/assets/architecture-diagram.png)
+![Architecture Diagram](static/architecture-diagram.png)
 
 
 ## Testing
