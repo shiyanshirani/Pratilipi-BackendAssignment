@@ -32,14 +32,14 @@ Start all the microservices
 
 ## Screenshots
 
-![Architecture Diagram](assets/architecture-diagram.png)
+![Architecture Diagram](/assets/architecture-diagram.png)
 
 
 ## Testing
 
 To run tests, run the following command
 
-```http
+```bash
   POST http://127.0.0.1:8000/api/books
 ```
 
@@ -51,7 +51,7 @@ To run tests, run the following command
 
 ## Documentation
 - Swagger documentation
-```http
+```bash
  http://127.0.0.0.1/8000/docs
  http://127.0.0.1/8001/docs
  http://127.0.0.0.1/8002/docs
