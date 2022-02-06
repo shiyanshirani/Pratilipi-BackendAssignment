@@ -64,4 +64,3 @@ To run tests, run the following command
 
 - [MIT](https://choosealicense.com/licenses/mit/)
 
-0
