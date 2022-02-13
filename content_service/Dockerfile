@@ -18,7 +18,7 @@ COPY ./content_service/ $PTH/
 
 EXPOSE 8000
 
-RUN python3 manage.py makemigration
+RUN python3 manage.py makemigrations
 RUN python3 manage.py migrate
 
 ENTRYPOINT ["python3", "manage.py", "runserver", "0.0.0.0:8000"]
