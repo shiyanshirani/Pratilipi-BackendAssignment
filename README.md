@@ -15,7 +15,7 @@ Clone the project
 Go to the project directory
 
 ```bash
-  cd Pratilipi
+  cd Pratilipi-BackendAssignment
 ```
 
 Build Docker image. (Prerequisite - make)
