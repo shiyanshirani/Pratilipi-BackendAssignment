@@ -18,4 +18,7 @@ COPY ./user_interaction_service/ $PTH/
 
 EXPOSE 8002
 
+RUN python3 manage.py makemigrations
+RUN python3 manage.py migrate
+
 ENTRYPOINT ["python3", "manage.py", "runserver", "0.0.0.0:8002"]
